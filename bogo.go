@@ -1,12 +1,13 @@
 package bogo
 
 import (
+	"github.com/saltbo/bogo/engine"
 	"github.com/saltbo/bogo/types"
 )
 
 type App struct {
 	Config   types.ConfigInterface
-	Router   types.RouterInterface
+	Router   engine.Engine
 	Database types.DatabaseInterface
 	Cache    types.CacheInterface
 	Logger   types.LoggerInterface
@@ -22,5 +23,6 @@ func NewApp(config string) (*App, error) {
 }
 
 func (a *App) Run() error {
+
 	return nil
 }

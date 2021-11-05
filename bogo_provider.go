@@ -2,7 +2,7 @@ package bogo
 
 import (
 	"github.com/saltbo/bogo/config"
-	"github.com/saltbo/bogo/router"
+	"github.com/saltbo/bogo/engine"
 	"github.com/saltbo/bogo/types"
 )
 
@@ -10,8 +10,8 @@ func ConfigConstructor(filepath string) (types.ConfigInterface, error) {
 	return config.NewDefaultConfig()
 }
 
-func RouterConstructor(configInterface types.ConfigInterface) (types.RouterInterface, error) {
-	return router.NewDefaultRouter()
+func RouterConstructor(configInterface types.ConfigInterface) (*engine.Engine, error) {
+	return engine.New()
 }
 
 func DatabaseConstructor(configInterface types.ConfigInterface) (types.DatabaseInterface, error) {
