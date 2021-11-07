@@ -13,28 +13,28 @@ import (
 // Injectors from bogo_injector.go:
 
 func buildInjectors(config string) (*App, func(), error) {
-	configInterface, err := ConfigConstructor(config)
+	configConfig, err := ConfigConstructor(config)
 	if err != nil {
 		return nil, nil, err
 	}
-	routerInterface, err := RouterConstructor(configInterface)
+	routerInterface, err := RouterConstructor(configConfig)
 	if err != nil {
 		return nil, nil, err
 	}
-	databaseInterface, err := DatabaseConstructor(configInterface)
+	databaseInterface, err := DatabaseConstructor(configConfig)
 	if err != nil {
 		return nil, nil, err
 	}
-	cacheInterface, err := CacheConstructor(configInterface)
+	cacheInterface, err := CacheConstructor(configConfig)
 	if err != nil {
 		return nil, nil, err
 	}
-	loggerInterface, err := LoggerConstructor(configInterface)
+	loggerInterface, err := LoggerConstructor(configConfig)
 	if err != nil {
 		return nil, nil, err
 	}
 	app := &App{
-		Config:   configInterface,
+		Config:   configConfig,
 		Router:   routerInterface,
 		Database: databaseInterface,
 		Cache:    cacheInterface,

@@ -1,0 +1,7 @@
+database:
+  db1:
+    write: ""
+    read: ""
+  db2:
+    write: ""
+    read: ""

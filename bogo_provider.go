@@ -2,26 +2,27 @@ package bogo
 
 import (
 	"github.com/saltbo/bogo/config"
-	"github.com/saltbo/bogo/engine"
+	"github.com/saltbo/bogo/database"
+	"github.com/saltbo/bogo/router"
 	"github.com/saltbo/bogo/types"
 )
 
-func ConfigConstructor(filepath string) (types.ConfigInterface, error) {
-	return config.NewDefaultConfig()
+func ConfigConstructor(filepath string) (*config.Config, error) {
+	return config.New(filepath)
 }
 
-func RouterConstructor(configInterface types.ConfigInterface) (*engine.Engine, error) {
-	return engine.New()
+func RouterConstructor(cfg *config.Config) (types.RouterInterface, error) {
+	return router.NewRouter(cfg), nil
 }
 
-func DatabaseConstructor(configInterface types.ConfigInterface) (types.DatabaseInterface, error) {
+func DatabaseConstructor(cfg *config.Config) (types.DatabaseInterface, error) {
+	return database.New(cfg)
+}
+
+func CacheConstructor(cfg *config.Config) (types.CacheInterface, error) {
 	return nil, nil
 }
 
-func CacheConstructor(configInterface types.ConfigInterface) (types.CacheInterface, error) {
-	return nil, nil
-}
-
-func LoggerConstructor(configInterface types.ConfigInterface) (types.LoggerInterface, error) {
+func LoggerConstructor(cfg *config.Config) (types.LoggerInterface, error) {
 	return nil, nil
 }

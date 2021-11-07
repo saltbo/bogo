@@ -1,9 +1,12 @@
-package gin
+package router
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/saltbo/bogo/engine/types"
+	"fmt"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
+
+	"github.com/saltbo/bogo/router/types"
 )
 
 type Handler struct {
@@ -12,7 +15,7 @@ type Handler struct {
 
 func (h *Handler) Get(c *gin.Context) {
 	name := c.Param("name")
-	resource, err := h.Resource.Get(name)
+	resource, err := h.Resource.Get(c, name)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
@@ -23,28 +26,29 @@ func (h *Handler) Get(c *gin.Context) {
 
 func (h *Handler) Find(c *gin.Context) {
 	query := h.Resource.Query()
-	if err := c.ShouldBind(&query); err != nil {
+	if err := c.ShouldBindQuery(query); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	resources, err := h.Resource.Find(query)
+	resources, total, err := h.Resource.Find(c, query)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
+	fmt.Println(total)
 	c.JSON(http.StatusOK, resources)
 }
 
 func (h *Handler) Create(c *gin.Context) {
 	resource := h.Resource.Model()
-	if err := c.ShouldBind(&resource); err != nil {
+	if err := c.ShouldBind(resource); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := h.Resource.Create(resource); err != nil {
+	if err := h.Resource.Create(c, resource); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
@@ -54,12 +58,12 @@ func (h *Handler) Create(c *gin.Context) {
 
 func (h *Handler) Put(c *gin.Context) {
 	resource := h.Resource.Model()
-	if err := c.ShouldBind(&resource); err != nil {
+	if err := c.ShouldBind(resource); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := h.Resource.Update(resource); err != nil {
+	if err := h.Resource.Update(c, resource); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
@@ -73,13 +77,13 @@ func (h *Handler) Patch(c types.Context) {
 
 func (h *Handler) Delete(c *gin.Context) {
 	name := c.Param("name")
-	resource, err := h.Resource.Get(name)
+	resource, err := h.Resource.Get(c, name)
 	if err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
 		return
 	}
 
-	if err := h.Resource.Delete(resource); err != nil {
+	if err := h.Resource.Delete(c, resource); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
